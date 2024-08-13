@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/4.0.0/introjs.min.css">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/app.js' %}"></script>
+</head>
+<body>
+<button class="menu-toggle">
+    <i class="fas fa-bars"></i>
+</button>
+    <div class="sidebar" data-intro="This is the sidebar where you can navigate through different sections of the dashboard.">
+        <div class="user-profile" data-intro="This is your profile section. You can see your name and ID here.">
+            <img src="{% static 'images/user.png' %}" alt="User Image" class="img-fluid rounded-circle">
+            <h3>{{ user.forename }}</h3>
+            <h6>ID: {{user.id}}</h6>
+        </div>
+
+        <a href="{% url 'admin_dashboard' %}" class="selected" data-intro="Click here to go to the Dashboard."><i class="fas fa-tachometer-alt"></i><span class="menu-text">Dashboard</span></a>
+        <a href="{% url 'admin_manage_children' %}" data-intro="Click here to Manage Children details."><i class="fa fa-child"></i> <span class="menu-text">Manage Children</span></a>
+        <a href="{% url 'manage_applications' %}" data-intro="Click here to view Applications."><i class="fas fa-box"></i> <span class="menu-text">Manage Applications</span></a>
+        <a href="{% url 'notification_list' %}" class="nav-link" data-intro="Click here to go to the Notifications Panel."><i class="fa fa-bell"></i> <span class="menu-text"></i>Manage Notifications</span></a>
+        <a href="#" data-intro="Click here to view and edit your Profile."><i class="fas fa-user"></i> <span class="menu-text">Manage School</span></a>
+
+        <div class="contact-support" data-intro="If you need any help, you can contact support here.">
+            <p>Contact Support</p>
+            <i class="fas fa-headset"></i>
+        </div>
+    </div>
+    <div class="sidebar-toggle" data-intro="Use this button to collapse or expand the sidebar.">
+        <i class="fas fa-bars"></i>
+    </div>
+    <div class="main-content" data-intro="This is the main content area where you can see the detailed information and actions.">
+        <div class="header" data-intro="This is the header with the title and logout button.">
+            <span>Dashboard</span>
+            <div class="right">
+                <span>Status: Online</span>
+                <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+        <!-- Place common elements like cards here -->
+        <div class="common-elements">
+            {% block common_elements %}
+        <div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Applications</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_applications }}</h5>
+                    <p class="card-text">Number of applications submitted by all</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">In Progress</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ applications_in_progress }}</h5>
+                    <p class="card-text">Applications currently being processed.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Offers Accepted</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ applications_offer_accepted }}</h5>
+                    <p class="card-text">Offers that have been accepted.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+
+        <div class="notifications-section">
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                Important Notifications
+            </div>
+            <div class="card-body">
+                {% if notifications %}
+                    {% for notification in notifications %}
+                        <div class="alert alert-info">
+                            <strong>{{ notification.title }}</strong> - {{ notification.message }}
+                            <small class="text-muted">{{ notification.date|date:"F j, Y, g:i a" }}</small>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center">No new notifications at the moment.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</div>
+
+        {% block content %}
+        {% endblock %}
+    </div>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/4.0.0/intro.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.sidebar-toggle').click(function() {
+                $('.sidebar').toggleClass('collapsed');
+                $('.main-content').toggleClass('collapsed');
+                $('.navbar').toggleClass('collapsed');
+                $('.content').toggleClass('collapsed');
+            });
+
+            $('.sidebar a').click(function() {
+                $('.sidebar a').removeClass('selected');
+                $(this).addClass('selected');
+            });
+
+document.addEventListener("DOMContentLoaded", function() {
+    var sidebar = document.querySelector('.sidebar');
+    var toggleButton = document.querySelector('.menu-toggle');
+
+    toggleButton.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+    });
+});
+
+
+    $(document).ready(function() {
+    // View application details
+    $('.view-application-btn').on('click', function() {
+        var applicationId = $(this).data('application-id');
+        $('#edit-application-form').hide();
+        $('#applicationDetailsContent').show();
+        $.ajax({
+            url: '{% url "view_application_details" 0 %}'.replace('0', applicationId),
+            method: 'GET',
+            success: function(data) {
+                var modalBody = $('#applicationDetailsModal .modal-body #applicationDetailsContent');
+                modalBody.empty();
+                modalBody.append('<p><strong>Application ID:</strong> ' + data.application_id + '</p>');
+                modalBody.append('<p><strong>Child Name:</strong> ' + data.child_name + '</p>');
+                modalBody.append('<p><strong>Child Date of Birth:</strong> ' + data.child_dob + '</p>');
+                modalBody.append('<p><strong>Child Age:</strong> ' + data.child_age + '</p>');
+                modalBody.append('<p><strong>Child NHS Number:</strong> ' + data.child_nhs_number + '</p>');
+                modalBody.append('<p><strong>Child Gender:</strong> ' + data.child_gender + '</p>');
+                modalBody.append('<p><strong>Parent Name:</strong> ' + data.parent_name + '</p>');
+                modalBody.append('<p><strong>Parent Email:</strong> ' + data.parent_email + '</p>');
+                modalBody.append('<p><strong>Parent Phone:</strong> ' + data.parent_phone + '</p>');
+                modalBody.append('<p><strong>Applied On:</strong> ' + data.applied_on + '</p>');
+
+                // Highlight status in green if offer_received
+                if (data.status === 'offer_received') {
+                    modalBody.append('<p><strong>Status:</strong> <span class="text-success">' + data.status + '</span></p>');
+                } else {
+                    modalBody.append('<p><strong>Status:</strong> ' + data.status + '</p>');
+                }
+
+                // Highlight offered school in green if not None
+                if (data.offered_school_name) {
+                    modalBody.append('<p><strong>Offered School:</strong> <span class="text-success">' + data.offered_school_name + '</span></p>');
+                } else {
+                    modalBody.append('<p><strong>Offered School:</strong> None</p>');
+                }
+
+                modalBody.append('<h5>Preferences</h5>');
+                data.preferences.forEach(function(preference, index) {
+                    modalBody.append('<p><strong>Selected School ' + (index + 1) + ':</strong></p>');
+                    modalBody.append('<p><strong>School Name:</strong> ' + preference.school.name + '</p>');
+                    modalBody.append('<p><strong>School Address:</strong> ' + preference.school.address + '</p>');
+                    modalBody.append('<p><strong>School Phone:</strong> ' + preference.school.phone + '</p>');
+                    modalBody.append('<p><strong>School Website:</strong> <a href="' + preference.school.website + '">' + preference.school.website + '</a></p>');
+                    modalBody.append('<p><strong>School Email:</strong> ' + preference.school.email + '</p>');
+                    modalBody.append('<p><strong>Preference:</strong> ' + preference.preference + '</p>');
+                    if (preference.siblings.length > 0) {
+                        modalBody.append('<h6>Siblings:</h6>');
+                        preference.siblings.forEach(function(sibling) {
+                            modalBody.append('<p>Name: ' + sibling.name + '</p>');
+                            modalBody.append('<p>Date of Birth: ' + sibling.dob + '</p>');
+                            modalBody.append('<p>Year Group: ' + sibling.year_group + '</p>');
+                        });
+                    }
+                });
+                $('#applicationDetailsModal').modal('show');
+            },
+            error: function(error) {
+                console.error('Error fetching application details:', error);
+            }
+        });
+    });
+});
+
+
+
+$(document).ready(function() {
+    // Function to populate schools dropdown
+    function populateSchoolsDropdown(applicationId) {
+        $.ajax({
+            url: '{% url "view_application_details" 0 %}'.replace('0', applicationId),
+            method: 'GET',
+            success: function(data) {
+                var offerSchoolSelect = $('#offer_school');
+                offerSchoolSelect.empty();
+                if (data.preferences && data.preferences.length > 0) {
+                    data.preferences.forEach(function(preference) {
+                        if (preference.school && preference.school.name && preference.school.id) {
+                            offerSchoolSelect.append(new Option(preference.school.name, preference.school.id));
+                        }
+                    });
+                }
+                if (data.offered_school_id) {
+                    $('#offer_school').val(data.offered_school_id);
+                }
+            },
+            error: function(error) {
+                console.error('Error fetching application details:', error);
+            }
+        });
+    }
+
+    // Edit application button click event
+    $('.edit-application-btn').on('click', function() {
+        var applicationId = $(this).data('application-id');
+        $('#applicationDetailsContent').hide();
+        $('#edit-application-form').show();
+        $('#application-id').val(applicationId);
+
+        $.ajax({
+            url: '{% url "view_application_details" 0 %}'.replace('0', applicationId),
+            method: 'GET',
+            success: function(data) {
+                $('#status').val(data.status);
+                if (data.status === 'offer_received') {
+                    $('#offer-school-group').show();
+                    populateSchoolsDropdown(applicationId);
+                } else {
+                    $('#offer-school-group').hide();
+                }
+            },
+            error: function(error) {
+                console.error('Error fetching application details:', error);
+            }
+        });
+    });
+
+    // Show/hide school selection based on status change
+    $('#status').on('change', function() {
+        var applicationId = $('#application-id').val();
+        if ($(this).val() === 'offer_received') {
+            $('#offer-school-group').show();
+            populateSchoolsDropdown(applicationId);
+        } else {
+            $('#offer-school-group').hide();
+        }
+    });
+
+    // Submit edit form
+    $('#edit-application-form').on('submit', function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var applicationId = $('#application-id').val();
+        $.ajax({
+            url: '{% url "edit_application" 0 %}'.replace('0', applicationId),
+            method: 'POST',
+            data: formData,
+            success: function(response) {
+                if (response.success) {
+                    $('#applicationDetailsModal').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error saving application details:', status, error);
+            }
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+        function getSelectedSchools() {
+            let selectedSchools = [];
+            $('#selectedSchools .school-item').each(function() {
+                selectedSchools.push($(this).data('school-id'));
+            });
+            return selectedSchools;
+        }
+
+        function loadSelectedSchools(schools) {
+            schools.forEach(function(schoolId) {
+                // Code to add school to the selected schools list
+                // Example:
+                $('#selectedSchools').append('<div class="school-item" data-school-id="' + schoolId + '">School ' + schoolId + '</div>');
+            });
+        }
+    });
+
+    </script>
+</body>
+</html>

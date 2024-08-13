@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Your existing dashboard cards -->
+    </div>
+    <div class="container mt-4">
+    <h2>My Children</h2>
+    <div class="row">
+        {% for item in children_with_applications %}
+            <div class="col-md-4">
+                <div class="child-card">
+                    <div class="child-profile-container">
+                        <div class="child-profile-img">
+                            <img src="{% static 'images/child_avatar.jpg' %}" alt="Child Avatar">
+                        </div>
+                        <div class="child-profile-description">
+                            <p class="child-title">{{ item.child.name }}</p>
+                            <p class="child-age">Age: {{ item.child.age }} years</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <a href="{% url 'manage_children' %}" class="btn btn-primary mt-4">Manage Children</a>
+</div>
+
+
+    <div class="container mt-4">
+    <h2>Nearby Schools</h2>
+    <div class="row">
+        {% for school in nearby_schools %}
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ school.title }}</h5>
+                        <p class="card-text">{{ school.address }}</p>
+                        <p class="card-text">Distance: {{ school.distance }} meters</p>
+                        {% if school.website %}
+                            <p class="card-text">Website: <a href="{{ school.website }}" target="_blank">{{ school.website }}</a></p>
+                        {% else %}
+                            <p class="card-text">Website: Not available</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+{% endblock %}
